@@ -152,6 +152,8 @@ try:
                             if len(df_usuario) == 0:
                                 ws_pronosticos.append_row([f"PR-{int(time.time())}", st.session_state.correo, st.session_state.nombre, st.session_state.departamento, id_partido, goles_local, goles_visitante, "", 1])
                                 st.success("✅ ¡Pronóstico guardado exitosamente!")
+                                time.sleep(1.5)
+                                st.rerun()
                             else:
                                 intentos = df_usuario['Intentos'].values[0] if 'Intentos' in df_usuario.columns and not pd.isna(df_usuario['Intentos'].values[0]) else 1
                                 if int(intentos) >= 2: st.error("🚫 Ya utilizaste tu única oportunidad de cambio.")
@@ -161,6 +163,8 @@ try:
                                     ws_pronosticos.update_cell(fila, 7, goles_visitante)
                                     ws_pronosticos.update_cell(fila, 9, 2)
                                     st.info("🔄 Pronóstico actualizado.")
+                                    time.sleep(1.5)
+                                    st.rerun()
 
         with tab2:
             df_mostrar = df_partidos.copy()
