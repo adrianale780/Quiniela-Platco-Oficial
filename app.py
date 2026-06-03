@@ -57,8 +57,12 @@ def calcular_puntos(pred_l, pred_v, real_l, real_v, estatus):
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 try:
-    creds = ServiceAccountCredentials.from_json_keyfile_name("credenciales.json", scope)
+    import json
+    # Ahora lee de la bóveda secreta, no del archivo físico
+    cred_dict = json.loads(st.secrets["google_json"])
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(cred_dict, scope)
     client = gspread.authorize(creds)
+    
     sheet = client.open("Quiniela_Platco_BD")
     
     ws_usuarios = sheet.worksheet("Usuarios")
