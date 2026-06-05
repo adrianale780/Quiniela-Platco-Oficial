@@ -30,6 +30,8 @@ estilo_corporativo = """
 </style>
 """
 st.markdown(estilo_corporativo, unsafe_allow_html=True)
+def separador_cancha():
+    st.markdown("<div style='text-align: center; font-size: 20px; color: #27AE60; letter-spacing: 5px;'>⚽ 🟢 ⚽ 🟢 ⚽ 🟢 ⚽</div>", unsafe_allow_html=True)
 
 banderas = {
     "México": "🇲🇽", "Sudáfrica": "🇿🇦", "Corea del Sur": "🇰🇷", "República Checa": "🇨🇿",
@@ -86,7 +88,7 @@ try:
 
     if not st.session_state.usuario_autenticado:
         st.title("🔐 Acceso a la Quiniela Platco")
-        st.markdown("---")
+        separador_cancha()
         col_login, col_registro = st.columns(2)
         with col_login:
             st.subheader("Entrar a mi cuenta")
@@ -125,7 +127,7 @@ try:
             if st.button("🚪 Cerrar Sesión"):
                 st.session_state.usuario_autenticado = False
                 st.rerun()
-        st.markdown("---")
+        separador_cancha()
 
         # NUEVA ESTRUCTURA DE PESTAÑAS (4 TABS)
         tab1, tab2, tab3, tab4 = st.tabs(["📝 Hacer Pronóstico", "📅 Calendario", "📊 Dashboard", "👤 Mis Pronósticos"])
@@ -193,7 +195,7 @@ try:
                     kpi2.metric("🥇 Líder Actual", ranking['Nombre'].iloc[0], f"{ranking['Puntos_Ganados'].iloc[0]} pts")
                     kpi3.metric("🏆 Depto. en Cabeza", df_cruce.groupby('Departamento')['Puntos_Ganados'].sum().idxmax())
                 
-                st.markdown("---")
+                separador_cancha()
                 st.dataframe(ranking, use_container_width=True)
             else:
                 st.info("Aún no hay predicciones para mostrar el ranking.")
@@ -223,7 +225,7 @@ try:
                     c2.metric("🎯 Aciertos Exactos (3 pts)", aciertos_exactos)
                     c3.metric("📈 Aciertos Tendencia (1 pt)", aciertos_tendencia)
                     
-                    st.markdown("---")
+                    separador_cancha()
                     st.dataframe(tabla_mostrar, use_container_width=True)
                 else:
                     st.info("Aún no has guardado ningún pronóstico.")
