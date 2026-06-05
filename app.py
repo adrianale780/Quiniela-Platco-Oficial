@@ -129,8 +129,8 @@ try:
                 st.rerun()
         separador_cancha()
 
-        # NUEVA ESTRUCTURA DE PESTAÑAS (4 TABS)
-        tab1, tab2, tab3, tab4 = st.tabs(["📝 Hacer Pronóstico", "📅 Calendario", "📊 Dashboard", "👤 Mis Pronósticos"])
+        # NUEVA ESTRUCTURA DE PESTAÑAS FUTBOLERAS
+        tab1, tab2, tab3, tab4 = st.tabs(["👟 A la Cancha (Votar)", "📆 Fixture Oficial", "🏆 Tabla de Posiciones", "🏟️ Mi Vestuario"])
         
         with tab1:
             partidos_pendientes = df_partidos[df_partidos['Estatus'] == 'Pendiente']
