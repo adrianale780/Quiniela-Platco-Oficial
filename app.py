@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 # 1. Configuración de la página y Estilo Corporativo
 st.set_page_config(page_title="Quiniela Platco 2026", page_icon="🏆", layout="wide", initial_sidebar_state="collapsed")
-
+st.image("banner.png", use_container_width=True)
 estilo_corporativo = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
