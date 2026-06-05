@@ -145,25 +145,31 @@ try:
                     else:
                         id_partido = partido_seleccionado.split("(")[-1].replace(")", "")
                         fecha_partido = datetime.strptime(df_partidos[df_partidos['ID_Partido'] == id_partido]['Fecha_Hora'].values[0], "%Y-%m-%d %H:%M")
-                        if datetime.now() > fecha_partido - timedelta(minutes=30): st.error("⏳ ¡Tiempo agotado!")
+                        
+                        if datetime.now() > fecha_partido - timedelta(minutes=30): 
+                            st.error("⏳ ¡Tiempo agotado! El árbitro ya pitó.")
                         else:
                             df_usuario = df_pronosticos[(df_pronosticos['Usuario'] == st.session_state.correo) & (df_pronosticos['ID_Partido'] == id_partido)]
                             ws_pronosticos = sheet.worksheet("Pronosticos")
+                            
                             if len(df_usuario) == 0:
                                 ws_pronosticos.append_row([f"PR-{int(time.time())}", st.session_state.correo, st.session_state.nombre, st.session_state.departamento, id_partido, goles_local, goles_visitante, "", 1])
-                                st.success("✅ ¡Pronóstico guardado exitosamente!")
-                                time.sleep(1.5)
-                                st.rerun()
+                                st.success("✅ ¡Gooooolazo! Tu pronóstico está en la red. 🥅")
+                                st.balloons()   # 🎈 LLUVIA DE GLOBOS AL VOTAR
+                                time.sleep(1.5) 
+                                st.rerun()      
                             else:
                                 intentos = df_usuario['Intentos'].values[0] if 'Intentos' in df_usuario.columns and not pd.isna(df_usuario['Intentos'].values[0]) else 1
-                                if int(intentos) >= 2: st.error("🚫 Ya utilizaste tu única oportunidad de cambio.")
+                                if int(intentos) >= 2: 
+                                    st.error("🚫 Roja directa. Ya utilizaste tu única oportunidad de cambio.")
                                 else:
                                     fila = int(df_usuario.index[0]) + 2 
                                     ws_pronosticos.update_cell(fila, 6, goles_local)
                                     ws_pronosticos.update_cell(fila, 7, goles_visitante)
                                     ws_pronosticos.update_cell(fila, 9, 2)
-                                    st.info("🔄 Pronóstico actualizado.")
-                                    time.sleep(1.5)
+                                    st.info("🔄 Cambio táctico realizado. Pronóstico actualizado.")
+                                    st.balloons()   # 🎈 LLUVIA DE GLOBOS AL ACTUALIZAR
+                                    time.sleep(1.5) 
                                     st.rerun()
 
         with tab2:
