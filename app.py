@@ -78,7 +78,8 @@ try:
     ws_usuarios = sheet.worksheet("Usuarios")
     df_usuarios = pd.DataFrame(ws_usuarios.get_all_records())
     df_partidos = pd.DataFrame(sheet.worksheet("Partidos").get_all_records())
-    df_pronosticos = pd.DataFrame(sheet.worksheet("Pronosticos").get_all_records())
+    datos_pro = sheet.worksheet("Pronosticos").get_all_values()
+    df_pronosticos = pd.DataFrame(datos_pro[1:], columns=datos_pro[0]) if len(datos_pro) > 0 else pd.DataFrame()
     
     # Procesar cruce de datos globalmente para usarlo en múltiples pestañas
     df_cruce = pd.DataFrame()
