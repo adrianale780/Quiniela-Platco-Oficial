@@ -147,10 +147,20 @@ try:
                     if partido_seleccionado == "No hay partidos pendientes": st.error("No hay partidos.")
                     else:
                         id_partido = partido_seleccionado.split("(")[-1].replace(")", "")
-                        fecha_partido = datetime.strptime(df_partidos[df_partidos['ID_Partido'] == id_partido]['Fecha_Hora'].values[0], "%Y-%m-%d %H:%M")
                         
-                        if datetime.now() > fecha_partido - timedelta(minutes=30): 
-                            st.error("⏳ ¡Tiempo agotado! El árbitro ya pitó.")
+                        # 1. Obtener la hora y el estatus actual del Excel
+                        fila_partido = df_partidos[df_partidos['ID_Partido'] == id_partido]
+                        fecha_partido = datetime.strptime(fila_partido['Fecha_Hora'].values[0], "%Y-%m-%d %H:%M")
+                        estatus_partido = str(fila_partido['Estatus'].values[0]).strip()
+                        
+                        # 2. Calcular la hora real y exacta de Venezuela (Servidor UTC - 4 horas)
+                        hora_venezuela = datetime.utcnow() - timedelta(hours=4)
+                        
+                        # 3. Doble Validación Anti-Trampas (Por estatus manual o por hora exacta)
+                        if estatus_partido in ["En curso", "Finalizado"]:
+                            st.error("⏳ ¡El partido está en curso o finalizado! Cierre manual activado.")
+                        elif hora_venezuela >= fecha_partido: 
+                            st.error("⏳ ¡Tiempo agotado! Ya es la hora del pitazo inicial.")
                         else:
                             df_usuario = df_pronosticos[(df_pronosticos['Usuario'] == st.session_state.correo) & (df_pronosticos['ID_Partido'] == id_partido)]
                             ws_pronosticos = sheet.worksheet("Pronosticos")
@@ -158,7 +168,7 @@ try:
                             if len(df_usuario) == 0:
                                 ws_pronosticos.append_row([f"PR-{int(time.time())}", st.session_state.correo, st.session_state.nombre, st.session_state.departamento, id_partido, goles_local, goles_visitante, "", 1])
                                 st.success("✅ ¡Gooooolazo! Tu pronóstico está en la red. 🥅")
-                                st.balloons()   # 🎈 LLUVIA DE GLOBOS AL VOTAR
+                                st.balloons()   
                                 time.sleep(1.5) 
                                 st.rerun()      
                             else:
@@ -171,7 +181,7 @@ try:
                                     ws_pronosticos.update_cell(fila, 7, goles_visitante)
                                     ws_pronosticos.update_cell(fila, 9, 2)
                                     st.info("🔄 Cambio táctico realizado. Pronóstico actualizado.")
-                                    st.balloons()   # 🎈 LLUVIA DE GLOBOS AL ACTUALIZAR
+                                    st.balloons()   
                                     time.sleep(1.5) 
                                     st.rerun()
 
