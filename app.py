@@ -66,20 +66,35 @@ def calcular_puntos(pred_l, pred_v, real_l, real_v, estatus):
 # 4. Conexión a la Base de Datos
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-try:
+# Escudo 1: Conexión persistente
+@st.cache_resource
+def conectar_google():
     import json
-    # Ahora lee de la bóveda secreta, no del archivo físico
     cred_dict = json.loads(st.secrets["google_json"])
     creds = ServiceAccountCredentials.from_json_keyfile_dict(cred_dict, scope)
-    client = gspread.authorize(creds)
+    return gspread.authorize(creds)
+
+# Escudo 2: Memoria temporal de 60 segundos para no saturar a Google
+@st.cache_data(ttl=60)
+def cargar_tablas(_client):
+    hoja = _client.open("Quiniela_Platco_BD")
+    df_u = pd.DataFrame(hoja.worksheet("Usuarios").get_all_records())
+    df_pa = pd.DataFrame(hoja.worksheet("Partidos").get_all_records())
     
+    datos_pro = hoja.worksheet("Pronosticos").get_all_values()
+    df_pr = pd.DataFrame(datos_pro[1:], columns=datos_pro[0]) if len(datos_pro) > 0 else pd.DataFrame()
+    return df_u, df_pa, df_pr
+
+try:
+    # Ejecutamos los escudos
+    client = conectar_google()
     sheet = client.open("Quiniela_Platco_BD")
+    ws_usuarios = sheet.worksheet("Usuarios") # Mantenemos esto vivo para poder guardar usuarios nuevos
     
-    ws_usuarios = sheet.worksheet("Usuarios")
-    df_usuarios = pd.DataFrame(ws_usuarios.get_all_records())
-    df_partidos = pd.DataFrame(sheet.worksheet("Partidos").get_all_records())
-    datos_pro = sheet.worksheet("Pronosticos").get_all_values()
-    df_pronosticos = pd.DataFrame(datos_pro[1:], columns=datos_pro[0]) if len(datos_pro) > 0 else pd.DataFrame()
+    # Cargamos las tablas desde la memoria caché
+    df_usuarios, df_partidos, df_pronosticos = cargar_tablas(client)
+    
+    # Procesar cruce de datos globalmente para usarlo en múltiples pestañas
     
     # Procesar cruce de datos globalmente para usarlo en múltiples pestañas
     df_cruce = pd.DataFrame()
