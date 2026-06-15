@@ -88,7 +88,7 @@ def cargar_tablas(_client):
 try:
     # Ejecutamos los escudos
     client = conectar_google()
-    sheet = client.open_open_by_key("1iCLk-qPevw8RTHKO4cr74bwq864JNfz3fkoHE3PEvBI")
+    sheet = client.open_by_key("1iCLk-qPevw8RTHKO4cr74bwq864JNfz3fkoHE3PEvBI")
     ws_usuarios = sheet.worksheet("Usuarios") # Mantenemos esto vivo para poder guardar usuarios nuevos
     
     # Cargamos las tablas desde la memoria caché
