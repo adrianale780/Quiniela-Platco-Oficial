@@ -181,10 +181,18 @@ try:
                             ws_pronosticos = sheet.worksheet("Pronosticos")
                             
                             if len(df_usuario) == 0:
-                                ws_pronosticos.append_row([f"PR-{int(time.time())}", st.session_state.correo, st.session_state.nombre, st.session_state.departamento, id_partido, goles_local, goles_visitante, "", 1])
+                                # 1. Calculamos matemáticamente la próxima fila real
+                                siguiente_fila = len(df_pronosticos) + 2 
+                                
+                                # 2. Preparamos los datos
+                                nueva_data = [f"PR-{int(time.time())}", st.session_state.correo, st.session_state.nombre, st.session_state.departamento, id_partido, goles_local, goles_visitante, "", 1]
+                                
+                                # 3. Inyectamos los datos a la fuerza en esa fila exacta (Ignorando fantasmas)
+                                ws_pronosticos.insert_row(nueva_data, index=siguiente_fila)
+                                
                                 st.success("✅ ¡Gooooolazo! Tu pronóstico está en la red. 🥅")
                                 st.balloons()   
-                                time.sleep(1.5)
+                                time.sleep(1.5) 
                                 cargar_tablas.clear()
                                 st.rerun()      
                             else:
