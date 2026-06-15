@@ -184,7 +184,8 @@ try:
                                 ws_pronosticos.append_row([f"PR-{int(time.time())}", st.session_state.correo, st.session_state.nombre, st.session_state.departamento, id_partido, goles_local, goles_visitante, "", 1])
                                 st.success("✅ ¡Gooooolazo! Tu pronóstico está en la red. 🥅")
                                 st.balloons()   
-                                time.sleep(1.5) 
+                                time.sleep(1.5)
+                                cargar_tablas.clear()
                                 st.rerun()      
                             else:
                                 intentos = df_usuario['Intentos'].values[0] if 'Intentos' in df_usuario.columns and not pd.isna(df_usuario['Intentos'].values[0]) else 1
@@ -197,7 +198,8 @@ try:
                                     ws_pronosticos.update_cell(fila, 9, 2)
                                     st.info("🔄 Cambio táctico realizado. Pronóstico actualizado.")
                                     st.balloons()   
-                                    time.sleep(1.5) 
+                                    time.sleep(1.5)
+                                    cargar_tablas.clear()
                                     st.rerun()
 
         with tab2:
