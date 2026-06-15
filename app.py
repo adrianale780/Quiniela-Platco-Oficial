@@ -77,7 +77,7 @@ def conectar_google():
 # Escudo 2: Memoria temporal de 60 segundos para no saturar a Google
 @st.cache_data(ttl=60)
 def cargar_tablas(_client):
-    hoja = _client.open("Quiniela_Platco_BD")
+    hoja = _client.open_by_key("1iCLk-qPevw8RTHKO4cr74bwq864JNfz3fkoHE3PEvBI")
     df_u = pd.DataFrame(hoja.worksheet("Usuarios").get_all_records())
     df_pa = pd.DataFrame(hoja.worksheet("Partidos").get_all_records())
     
@@ -88,7 +88,7 @@ def cargar_tablas(_client):
 try:
     # Ejecutamos los escudos
     client = conectar_google()
-    sheet = client.open("Quiniela_Platco_BD")
+    sheet = client.open_open_by_key("1iCLk-qPevw8RTHKO4cr74bwq864JNfz3fkoHE3PEvBI")
     ws_usuarios = sheet.worksheet("Usuarios") # Mantenemos esto vivo para poder guardar usuarios nuevos
     
     # Cargamos las tablas desde la memoria caché
