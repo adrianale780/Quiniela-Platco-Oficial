@@ -122,17 +122,7 @@ try:
 
         with col_registro:
             st.subheader("Soy nuevo, quiero jugar")
-            with st.form("form_registro"):
-                nuevo_correo, nuevo_nombre = st.text_input("Tu Correo Platco"), st.text_input("Tu Nombre y Apellido")
-                nuevo_depto = st.selectbox("Tu Departamento", ["Operaciones", "Recursos Humanos", "Finanzas", "IT", "Ventas", "Otro"])
-                nuevo_pin = st.text_input("Crea un PIN numérico (Ej: 1234)", type="password")
-                if st.form_submit_button("Crear mi cuenta"):
-                    if "" in [nuevo_correo, nuevo_nombre, nuevo_pin]: st.warning("Llena todos los campos.")
-                    elif not nuevo_pin.isdigit(): st.error("El PIN debe ser numérico.")
-                    elif not df_usuarios.empty and nuevo_correo in df_usuarios['Correo'].values: st.error("Ese correo ya existe.")
-                    else:
-                        ws_usuarios.append_row([nuevo_correo, nuevo_nombre, nuevo_depto, int(nuevo_pin)])
-                        st.success("¡Cuenta creada! Inicia sesión a la izquierda.")
+            st.warning("🚫 Las inscripciones oficiales para la Quiniela han cerrado. ¡Mucho éxito a todos los participantes!")
     else:
         col_t, col_b = st.columns([4, 1])
         with col_t:
